@@ -1,0 +1,22 @@
+{
+  "name": "worker-dispatcher",
+  "version": "0.1.0",
+  "description": "Simple promise-based wrapper for web workers",
+  "main": "dist/worker-dispatcher.umd.js",
+  "module": "dist/worker-dispatcher.esm.js",
+  "browser": "dist/worker-dispatcher.cjs.js",
+  "scripts": {
+    "serve-example": "node example/server.js",
+    "build": "npx rollup -c"
+  },
+  "author": {
+    "name": "Arnau Giralt",
+    "url": "htps://github.com/arnaugiralt/"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "rollup": "^2.7.5",
+    "rollup-plugin-terser": "^5.3.0",
+    "serve": "^11.3.0"
+  }
+}
