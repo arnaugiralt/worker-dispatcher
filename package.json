@@ -6,6 +6,7 @@
   "module": "dist/worker-dispatcher.esm.js",
   "browser": "dist/worker-dispatcher.cjs.js",
   "scripts": {
+    "test": "npx jest",
     "serve-example": "node example/server.js",
     "build": "npx rollup -c"
   },
@@ -15,7 +16,9 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "jest": "^25.5.4",
     "rollup": "^2.7.5",
+    "rollup-jest": "0.0.2",
     "rollup-plugin-terser": "^5.3.0",
     "serve": "^11.3.0"
   }

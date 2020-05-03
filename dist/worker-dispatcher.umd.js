@@ -12,7 +12,7 @@
      */
     constructor (methods) {
       this._methods = methods;
-      this._initListeners();
+      self.addEventListener('message', this._onMessage.bind(this));
     }
 
     /**
@@ -49,8 +49,14 @@
           parsedFunc = func;
           break
         case 'string':
-          parsedFunc = new Function('return ' + serializedFunc)();
-          break
+  				try {
+  					parsedFunc = new Function('return ' + func)();
+  					if (typeof parsedFunc === 'function') {
+  						break
+  					}
+  				} catch (err) {
+  					throw err
+  				}
         default:
           throw new Error('Unsupported function type. Pass either a function or a stringified function')
   		}
@@ -68,35 +74,33 @@
       delete this._methods[name];
     }
 
-    _initListeners () {
-      const act = async ({ type, method, payload }) => {
-        try {
-          let returnValue;
-          switch (type) {
-            case 'dispatch':
-              returnValue = await this.dispatch(method, payload);
-              break
-            case 'register':
-              this.register(method, payload);
-              break
-            case 'unregister':
-              this.unregister(method);
-              break
-            default:
-              throw new Error('Unsupported action type')
-          }
-          return [undefined, returnValue]
-        } catch (error) {
-          return [error, undefined]
-        }
-      };
+    async _onMessage (event) {
+  		const { message, _id } = event.data;
+  		const [error, returnValue] = await this._act(message);
+  		postMessage([_id, error, returnValue]);
+  	}
 
-      self.addEventListener('message', async event => {
-        const { message, _id } = event.data;
-        const [error, returnValue] = await act(message);
-        postMessage([_id, error, returnValue]);
-      });
-    }
+  	async _act ({ type, method, payload }) {
+  		try {
+  			let returnValue;
+  			switch (type) {
+  				case 'dispatch':
+  					returnValue = await this.dispatch(method, payload);
+  					break
+  				case 'register':
+  					this.register(method, payload);
+  					break
+  				case 'unregister':
+  					this.unregister(method);
+  					break
+  				default:
+  					throw new Error('Unsupported action type')
+  			}
+  			return [undefined, returnValue]
+  		} catch (error) {
+  			return [error, undefined]
+  		}
+  	}
   }
 
   /**
