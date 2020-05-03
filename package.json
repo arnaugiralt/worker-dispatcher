@@ -1,6 +1,6 @@
 {
   "name": "worker-dispatcher",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Simple promise-based wrapper for web workers",
   "main": "dist/worker-dispatcher.umd.js",
   "module": "dist/worker-dispatcher.esm.js",

@@ -1,4 +1,4 @@
-import { Dispatcher } from '/src/main.js'
+import { Dispatcher } from './worker-dispatcher.js'
 
 new Dispatcher({
   fibonacci (n) {

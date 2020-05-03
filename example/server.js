@@ -3,8 +3,10 @@ const http = require('http');
 
 const server = http.createServer((request, response) => {
   return handler(request, response, {
+		cleanUrls: false,
+		public: './example',
     redirects: [
-      { source: '/', destination: '/example/index.html' }
+      { source: '/', destination: 'index.html' }
     ]
   });
 })

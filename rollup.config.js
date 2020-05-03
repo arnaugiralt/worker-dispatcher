@@ -27,6 +27,10 @@ export default {
 					}
 				})
 			]
+    },
+    {
+      file: 'example/worker-dispatcher.js',
+      format: 'esm'
     }
   ]
 }

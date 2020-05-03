@@ -18,6 +18,7 @@
     /**
      * Executes the registered method for the given name
      *
+     * @public
      * @param {String} name - The method's name
      * @param {*} payload - The payload that the method will be called with
      * @returns Function
@@ -37,7 +38,8 @@
     /**
      * Registers a new method to the methods registry, or overwrites it if a
      * method for the given name already exists
-     *
+  	 *
+     * @public
      * @param {String} name - The name that the function will be registered to
      * @param {Function|String} func - A regular or stringified function
      * @memberof Dispatcher
@@ -66,7 +68,8 @@
 
     /**
      * Deletes the method that corresponds with the given name from the registry
-     *
+  	 *
+     * @public
      * @param {String} name - The name of the method to delete
      * @memberof Dispatcher
      */
@@ -74,7 +77,12 @@
       delete this._methods[name];
     }
 
-    async _onMessage (event) {
+    /**
+  	 * @private
+  	 * @param {MessageEvent} event
+  	 * @memberof Dispatcher
+  	 */
+  	async _onMessage (event) {
   		const { message, _id } = event.data;
   		const [error, returnValue] = await this._act(message);
   		postMessage([_id, error, returnValue]);
@@ -88,10 +96,10 @@
   					returnValue = await this.dispatch(method, payload);
   					break
   				case 'register':
-  					this.register(method, payload);
+  					returnValue = this.register(method, payload);
   					break
   				case 'unregister':
-  					this.unregister(method);
+  					returnValue = this.unregister(method);
   					break
   				default:
   					throw new Error('Unsupported action type')

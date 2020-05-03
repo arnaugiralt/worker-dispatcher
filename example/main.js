@@ -1,4 +1,4 @@
-import { WorkerWrapper } from '/src/index.js'
+import { WorkerWrapper } from './worker-dispatcher.js'
 
 const wrapper = new WorkerWrapper(new Worker('./worker.js', { type: 'module' }))
 
