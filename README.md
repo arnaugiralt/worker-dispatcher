@@ -30,7 +30,7 @@ const wrapper = new WorkerWrapper(new Worker('my/worker/path'))
 
 ## API
 
-#### Main thread - `Dispatcher`
+#### Main thread - `WorkerWrapper`
 
 The worker wrapper is a class that requires to be initialized with a worker
 
@@ -63,7 +63,7 @@ const myWrapper = new Dispatcher({
 })
 ```
 
-Every method must have only one parameter. If you need to pass more than one parameter, use an object to wrap the payload.
+Every method must have only one argument. If you need to pass more than one parameter, use an object to wrap the payload.
 The second argument a method receives is the class' scope, so a method can call other methods.
 
 ```js
@@ -128,4 +128,64 @@ myWrapper.unregister('multiply')
 
 myWrapper.dispatch('multiply', { x: 2, y: 3})
 // Err: Method "multiply" not registered
+```
+
+## Usage examples in frameworks
+
+### Vue + Vuex
+
+You can easily use this library by binding the wrapper to a Vuex plugin.
+
+```js
+// store/index.js
+import Vue from 'vue'
+import Vuex from 'vuex'
+import { WorkerWrapper } from 'worker-dispatcher'
+
+Vue.use(Vuex)
+
+// A simple plugin 
+const workerPlugin = store => {
+	store.worker = new WorkerWrapper(new Worker('@/worker-store/example/worker', { type: 'module' }))
+}
+
+export default new Vuex.Store({
+  state: {
+  },
+  mutations: {
+  },
+  actions: {
+    async myAction ({ worker }, payload) {
+      await worker.dispatch('baz', payload)
+    }
+  },
+  modules: {
+  },
+  plugins: [workerPlugin]
+})
+
+// In your Vue components / Vuex actions
+...
+state: {
+	foo: 'bar'
+},
+actions: {
+	async myAction ({ state, worker }) {
+		return worker.dispatch('myWorkerAction', state.foo)
+	}
+}
+...
+
+export default {
+	data () {
+		return {
+			foo: 'bar'
+		}
+	},
+	methods: {
+		async myAction () {
+			return this.$store.worker.dispatch('myWorkerAction', this.foo)
+		}
+	}
+}
 ```
